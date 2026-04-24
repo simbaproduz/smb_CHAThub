@@ -10,7 +10,7 @@ Documentacao curta para publicar e manter a V1 coerente com o produto entregue.
 ## Escopo Publico
 
 - produto: Live Control - CHAThub
-- estado: V1 release candidate
+- estado: V1 publica `v1.0.1`
 - providers publicos: Twitch, YouTube, Kick e TikTok
 - overlay: janela local sempre por cima, configurada pela UI
 - dados privados: credenciais, tokens, logs e overrides locais nunca devem entrar no Git

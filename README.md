@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-8B5CF6?style=for-the-badge">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-8B5CF6?style=for-the-badge">
   <img alt="Status" src="https://img.shields.io/badge/status-stable-22C55E?style=for-the-badge">
   <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-3B82F6?style=for-the-badge&logo=windows">
   <img alt="License" src="https://img.shields.io/badge/license-MIT-EC4899?style=for-the-badge">

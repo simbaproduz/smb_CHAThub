@@ -14,6 +14,9 @@ let mainWindow = null;
 let stopServer = null;
 let cleanupStarted = false;
 
+// Prefer software rendering for this dashboard shell; it is more stable than
+// GPU compositing on third-party Windows machines with transparent windows.
+app.disableHardwareAcceleration();
 app.setName(APP_NAME);
 app.setAppUserModelId(APP_ID);
 
