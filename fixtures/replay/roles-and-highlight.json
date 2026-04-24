@@ -1,0 +1,46 @@
+{
+  "scenario": "roles-and-highlight",
+  "description": "Prova roles e mensagem destacada sem plataforma real.",
+  "events": [
+    {
+      "id": "roles-001",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:04:01Z",
+      "author": { "id": "user-julia", "name": "Julia", "roles": ["viewer"] },
+      "text": "Mensagem de viewer",
+      "parts": [{ "type": "text", "value": "Mensagem de viewer" }]
+    },
+    {
+      "id": "roles-002",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:04:02Z",
+      "author": { "id": "user-kai", "name": "Kai", "roles": ["mod"] },
+      "text": "Mensagem de moderador",
+      "parts": [{ "type": "text", "value": "Mensagem de moderador" }]
+    },
+    {
+      "id": "roles-003",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "highlight",
+      "time": "2026-04-22T00:04:03Z",
+      "author": { "id": "user-lia", "name": "Lia", "roles": ["subscriber"] },
+      "text": "Mensagem destacada",
+      "parts": [{ "type": "text", "value": "Mensagem destacada" }]
+    }
+  ],
+  "expected": {
+    "received": 3,
+    "shown": 3,
+    "duplicates": 0,
+    "commands_hidden": 0,
+    "errors": 0
+  }
+}

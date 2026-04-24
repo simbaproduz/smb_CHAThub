@@ -1,0 +1,80 @@
+{
+  "name": "smb-chathub",
+  "version": "1.0.0",
+  "description": "Unified live chat monitor and overlay for Twitch, YouTube, Kick and TikTok.",
+  "license": "MIT",
+  "author": "SIMBAproduz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simbaproduz/smb_CHAThub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/simbaproduz/smb_CHAThub/issues"
+  },
+  "homepage": "https://github.com/simbaproduz/smb_CHAThub#readme",
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "demo": "node src/server.mjs --demo",
+    "desktop": "electron .",
+    "build:desktop": "electron-builder --win portable --x64",
+    "build:desktop:dir": "electron-builder --dir --win --x64",
+    "check:replay": "node tools/replay-local.mjs",
+    "check:status": "node tools/status-state-regression.mjs",
+    "package:release": "powershell -ExecutionPolicy Bypass -File tools/package-release.ps1"
+  },
+  "dependencies": {
+    "tiktok-live-connector": "^2.1.0"
+  },
+  "devDependencies": {
+    "electron": "^41.3.0",
+    "electron-builder": "^26.8.1"
+  },
+  "overrides": {
+    "protobufjs": "^7.5.5"
+  },
+  "build": {
+    "appId": "com.simbaproduz.chathub",
+    "productName": "CHAT HUB",
+    "asar": false,
+    "directories": {
+      "output": "output/desktop"
+    },
+    "files": [
+      "desktop/**/*",
+      "src/**/*",
+      "tools/**/*",
+      "runtime/monitor-config.json",
+      "contracts/**/*",
+      "fixtures/**/*",
+      "icon/**/*",
+      "package.json",
+      "LICENSE",
+      "README.md",
+      "README.en.md",
+      "README.es.md",
+      "!runtime/monitor-config.local.json",
+      "!runtime/logs/**/*",
+      "!runtime/*.log",
+      "!output/**/*",
+      "!temp/**/*",
+      "!cache/**/*",
+      "!refs/**/*",
+      "!.playwright-cli/**/*",
+      "!.claude/**/*"
+    ],
+    "win": {
+      "icon": "icon/simba.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "CHAT-HUB-${version}-${arch}.${ext}"
+    }
+  }
+}

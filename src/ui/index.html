@@ -1,0 +1,147 @@
+<!--
+       __     __                   
+_|_   (_ ||\/|__) /\ _ _ _ _|   _  
+ |    __)||  |__)/--|_| (_(_||_|/_ 
+                    |  
+-->
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="title.monitor">Live Control - CHAThub</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="theme-dark page-monitor">
+    <div class="app-frame">
+      <aside class="sidebar" aria-label="Navegacao principal" data-i18n-aria-label="sidebar.aria">
+        <a href="/" class="sidebar-brand" aria-label="Live Control - CHAThub">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="/icon/simba.png" alt="" onerror="this.onerror=null;this.src='/icon/simba.ico';">
+          </span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <a href="/" class="nav-item is-active" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H13v2h3v2H8v-2h3v-2H6.5A2.5 2.5 0 0 1 4 13.5v-8Zm2.5-.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11Z"/></svg>
+            <span data-i18n="nav.monitor">Monitor</span>
+          </a>
+          <a href="/settings.html" class="nav-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8.4 8.4 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8.4 8.4 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a8.4 8.4 0 0 0 2.6 1.5L10 22h4l.4-2.5A8.4 8.4 0 0 0 17 18l2.4 1 2-3.5-2-2ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/></svg>
+            <span data-i18n="nav.settings">CONFIGURAÇÃO</span>
+          </a>
+          <a href="/about.html" class="nav-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4a2 2 0 0 1 2-2h12v16H7a2 2 0 0 0-2 2V4Zm2 16h12v2H7a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4h14v20H7Z"/></svg>
+            <span data-i18n="nav.about">COMO USAR</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="system-pill">
+            <span data-i18n="sidebar.system">Sistema</span>
+            <strong data-i18n="sidebar.operational">Operacional</strong>
+          </div>
+          <span class="app-version">v1.0.0</span>
+        </div>
+      </aside>
+
+      <main class="app-shell">
+        <header class="page-header">
+          <div class="title-block">
+            <p class="eyebrow"><a href="https://simbaproduz.com" target="_blank" rel="noopener noreferrer">@SIMBAproduz</a> | <span data-i18n="header.signature">Live Control</span></p>
+            <h1 data-i18n="header.monitor.title">CHAT HUB</h1>
+            <p class="hero-text" data-i18n="header.monitor.subtitle">Monitore chats ao vivo, acompanhe alertas e controle o overlay em tempo real.</p>
+          </div>
+          <div class="header-ops">
+            <div class="hero-runtime" id="runtimeCard"></div>
+          </div>
+        </header>
+
+        <section class="home-grid">
+          <div class="home-main stack">
+            <article class="panel feed-panel primary-feed-panel">
+              <div class="panel-head feed-head">
+                <div>
+                  <h2 data-i18n="home.chat">Chat</h2>
+                  <span class="panel-sub" id="feedSubtitle">Tudo em um só feed</span>
+                </div>
+                <div class="feed-actions">
+                  <button type="button" id="chatFollowButton" class="action tiny ghost chat-follow-button" hidden>Voltar ao vivo</button>
+                  <label class="panel-select">
+                    <span data-i18n="home.show">Mostrar</span>
+                    <select id="messageLimitSelect">
+                      <option value="25">25</option>
+                      <option value="60" selected>60</option>
+                      <option value="100">100</option>
+                      <option value="250">250</option>
+                      <option value="500">500</option>
+                      <option value="1500">1500</option>
+                      <option value="3000">3000</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div class="feed-list" id="messageList"></div>
+            </article>
+          </div>
+
+          <aside class="home-aside stack">
+            <article class="panel overlay-launch-card">
+              <div class="overlay-launch-top">
+                <span class="overlay-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h6v2H6v4H4V4Zm10 0h6v6h-2V6h-4V4ZM6 14v4h4v2H4v-6h2Zm12 0h2v6h-6v-2h4v-4Z"/></svg>
+                </span>
+                <div>
+                  <h2 data-i18n="home.overlay.title">Abrir overlay</h2>
+                  <span class="panel-sub" data-i18n="home.overlay.subtitle">Exibir chat em tempo real</span>
+                </div>
+              </div>
+              <div class="overlay-control">
+                <button id="overlayToggleButton" class="action solid overlay-action">Abrir Overlay</button>
+                <div class="overlay-status-line">
+                  <span id="overlayStatusBadge" class="provider-state overlay-status-badge">Fechado</span>
+                  <button type="button" id="chatCacheClearButton" class="action tiny ghost chat-cache-clear" title="Limpar buffer visual do chat" data-i18n="home.clearCache" data-i18n-title="home.clearCacheTitle">Limpar cache</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel system-panel compact-system-panel">
+              <div class="panel-head">
+                <div>
+                  <h2 data-i18n="home.recentStatus.title">Status recente</h2>
+                  <span class="panel-sub" data-i18n="home.recentStatus.subtitle">Somente sinais operacionais</span>
+                </div>
+                <span class="live-dot" data-i18n="home.recentStatus.live">Tempo real</span>
+              </div>
+              <div class="system-list" id="systemList"></div>
+            </article>
+
+            <article class="panel source-alert" id="sourceAlert" role="alert" aria-live="assertive" hidden></article>
+
+            <article class="panel connections-panel">
+              <div class="panel-head panel-head-with-filters">
+                <div>
+                  <h2 data-i18n="home.sources.title">Fontes ativas</h2>
+                  <span class="panel-sub" data-i18n="home.sources.subtitle">Conectadas e filtros</span>
+                </div>
+                <div class="filter-chips" aria-label="Filtro de plataforma" data-i18n-aria-label="home.sources.filterAria">
+                  <button data-filter="all" class="action tiny is-active" data-i18n="common.all">Todas</button>
+                  <button data-filter="twitch" class="action tiny platform-filter twitch">Twitch</button>
+                  <button data-filter="youtube" class="action tiny platform-filter youtube">YouTube</button>
+                  <button data-filter="kick" class="action tiny platform-filter kick">Kick</button>
+                  <button data-filter="tiktok" class="action tiny platform-filter tiktok">TikTok</button>
+                </div>
+              </div>
+              <div class="filter-status-card" id="filterStatusCard"></div>
+              <div class="connection-list" id="connectionList"></div>
+            </article>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

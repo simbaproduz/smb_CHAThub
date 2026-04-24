@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simba.local/live-control-chat-hub/chat-event-v0.schema.json",
+  "title": "ChatEvent v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "source", "channel", "kind", "time", "author", "text", "parts"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "const": "chat-event.v0" },
+    "source": { "type": "string", "enum": ["replay", "twitch", "youtube", "kick", "tiktok"] },
+    "channel": { "type": "string", "minLength": 1 },
+    "channel_display_name": { "type": "string" },
+    "connection_id": { "type": "string", "minLength": 1 },
+    "stream_id": { "type": "string" },
+    "kind": {
+      "type": "string",
+      "enum": ["message", "highlight", "command", "reward", "membership"]
+    },
+    "time": { "type": "string", "format": "date-time" },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "roles"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "minLength": 1 },
+        "color": { "type": "string" },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["streamer", "mod", "vip", "subscriber", "member", "viewer"]
+          },
+          "default": []
+        }
+      }
+    },
+    "text": { "type": "string" },
+    "accent_color": { "type": "string" },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "value"],
+        "properties": {
+          "type": { "type": "string", "enum": ["text", "emote", "link"] },
+          "value": { "type": "string" },
+          "alt": { "type": "string" },
+          "src": { "type": "string" },
+          "provider": { "type": "string" },
+          "id": { "type": "string" },
+          "width": { "type": "number" },
+          "height": { "type": "number" }
+        }
+      }
+    },
+    "raw_ref": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

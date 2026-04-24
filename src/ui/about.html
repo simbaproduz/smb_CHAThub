@@ -1,0 +1,181 @@
+<!--
+       __     __                   
+_|_   (_ ||\/|__) /\ _ _ _ _|   _  
+ |    __)||  |__)/--|_| (_(_||_|/_ 
+                    |  
+-->
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="title.about">COMO USAR | Live Control - CHAThub</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="theme-dark page-about">
+    <div class="app-frame">
+      <aside class="sidebar" aria-label="Navegacao principal" data-i18n-aria-label="sidebar.aria">
+        <a href="/" class="sidebar-brand" aria-label="Live Control - CHAThub">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="/icon/simba.png" alt="" onerror="this.onerror=null;this.src='/icon/simba.ico';">
+          </span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <a href="/" class="nav-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H13v2h3v2H8v-2h3v-2H6.5A2.5 2.5 0 0 1 4 13.5v-8Zm2.5-.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11Z"/></svg>
+            <span data-i18n="nav.monitor">Monitor</span>
+          </a>
+          <a href="/settings.html" class="nav-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8.4 8.4 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8.4 8.4 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a8.4 8.4 0 0 0 2.6 1.5L10 22h4l.4-2.5A8.4 8.4 0 0 0 17 18l2.4 1 2-3.5-2-2ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/></svg>
+            <span data-i18n="nav.settings">CONFIGURAÇÃO</span>
+          </a>
+          <a href="/about.html" class="nav-item is-active" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4a2 2 0 0 1 2-2h12v16H7a2 2 0 0 0-2 2V4Zm2 16h12v2H7a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4h14v20H7Z"/></svg>
+            <span data-i18n="nav.about">COMO USAR</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="system-pill">
+            <span data-i18n="sidebar.system">Sistema</span>
+            <strong data-i18n="sidebar.operational">Operacional</strong>
+          </div>
+          <span class="app-version">v1.0.0</span>
+        </div>
+      </aside>
+
+      <main class="app-shell">
+      <header class="page-header">
+        <div class="title-block">
+          <p class="eyebrow"><a href="https://simbaproduz.com" target="_blank" rel="noopener noreferrer">@SIMBAproduz</a> | <span data-i18n="header.signature">Live Control</span></p>
+          <h1 data-i18n="header.about.title">COMO USAR</h1>
+          <p class="hero-text" data-i18n="header.about.subtitle">Use o chat como HUD por cima do jogo, mesmo com um monitor só.</p>
+          <div class="onboarding-cta-row">
+            <button type="button" id="onboardingStartButton" class="action solid onboarding-start" data-i18n="about.startNow">Começar agora</button>
+          </div>
+        </div>
+        <div class="header-ops">
+          <div class="hero-runtime" id="runtimeCard"></div>
+        </div>
+      </header>
+
+      <section class="about-guide stack">
+        <article class="panel settings-card guide-panel guide-intro">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="about.flow.title">Fluxo ideal</h2>
+              <span class="panel-sub" data-i18n="about.flow.subtitle">Chat por cima do jogo, do OBS ou de uma segunda tela</span>
+            </div>
+          </div>
+          <div class="guide-copy">
+            <p data-i18n="about.flow.p1">O Live Control - CHAThub foi pensado para o streamer conseguir ler o chat enquanto joga. A janela do overlay fica sempre por cima: pode ficar sobre o jogo, sobre o OBS ou em outro monitor.</p>
+            <p data-i18n="about.flow.p2">Com um monitor só, você posiciona o chat em um canto da mesma tela do jogo e acompanha a live sem trocar de janela. Com dois monitores, pode deixar o chat em uma segunda tela e usar a Monitor como central de controle.</p>
+          </div>
+        </article>
+
+        <article class="panel settings-card guide-panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="about.connect.title">1. Conectar as fontes</h2>
+              <span class="panel-sub" data-i18n="about.connect.subtitle">Use a página CONFIGURAÇÃO quando quiser adicionar ou trocar canais</span>
+            </div>
+          </div>
+          <div class="guide-copy">
+            <p data-i18n="about.connect.p1">Cole uma URL pública da live ou do canal. O app identifica Twitch, YouTube, Kick e TikTok automaticamente e salva o alvo da plataforma.</p>
+            <p data-i18n="about.connect.p2">Depois de conectar, olhe os cards de plataforma. Se estiver tudo certo, o card fica ativo. Se uma live cair, ficar offline ou a plataforma recusar leitura, o Chat Hub mostra uma atenção.</p>
+          </div>
+          <div class="guide-platform-grid">
+            <div class="about-block">
+              <strong>Twitch</strong>
+              <p data-i18n-html="about.twitch.copy">Use <code>https://twitch.tv/canal</code> ou apenas o nome do canal.</p>
+            </div>
+            <div class="about-block">
+              <strong>YouTube</strong>
+              <p data-i18n-html="about.youtube.copy">Use URL da live, URL do canal, <code>@handle</code> ou channel ID.</p>
+            </div>
+            <div class="about-block">
+              <strong>Kick</strong>
+              <p data-i18n="about.kick.copy">Use a URL pública do canal ou da live.</p>
+            </div>
+            <div class="about-block">
+              <strong>TikTok</strong>
+              <p data-i18n-html="about.tiktok.copy">Use a URL pública da live ou o <code>@handle</code>.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel settings-card guide-panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="about.monitor.title">2. Acompanhar pela Monitor</h2>
+              <span class="panel-sub" data-i18n="about.monitor.subtitle">A tela principal é a central durante a live</span>
+            </div>
+          </div>
+          <div class="guide-copy">
+            <p data-i18n="about.monitor.p1">O chat principal reúne todas as mensagens em um feed único. Use os filtros quando quiser focar em uma plataforma específica, mas mantenha em Todas quando a ideia for acompanhar o clima geral do público.</p>
+            <p data-i18n="about.monitor.p2">O topo mostra quantas fontes estão realmente ao vivo e quantas precisam de atenção. Se algo cair, o status recente e o alerta mostram a plataforma afetada até o problema ser resolvido.</p>
+            <p data-i18n="about.monitor.p3">Quando você rolar o chat para ler mensagens antigas, o feed respeita essa interação. Para voltar para o tempo real, use o botão de novas mensagens.</p>
+          </div>
+        </article>
+
+        <article class="panel settings-card guide-panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="about.overlay.title">3. Usar o overlay sobre o jogo</h2>
+              <span class="panel-sub" data-i18n="about.overlay.subtitle">A janela do chat fica por cima para você ler enquanto joga</span>
+            </div>
+          </div>
+          <div class="guide-copy">
+            <p data-i18n="about.overlay.p1">Na Monitor, clique em Abrir Overlay. O Chat Hub abre uma janela separada do chat, feita para ficar por cima das outras janelas.</p>
+            <p data-i18n="about.overlay.p2">Se você usa um monitor só, deixe o overlay em um canto da própria tela do jogo. Assim você consegue jogar e ler o chat sem precisar alternar para o OBS ou para outra janela.</p>
+            <p data-i18n="about.overlay.p3">Se você usa dois monitores, mova o overlay para a segunda tela ou deixe a Monitor aberta lá. Se quiser que o público também veja o chat na transmissão, capture a janela do overlay no OBS.</p>
+            <p data-i18n="about.overlay.p4">O preview da CONFIGURAÇÃO é a referência visual do overlay. Ajustes de posição, tamanho, transparência, tempo na tela e filtros devem aparecer na janela real do chat.</p>
+          </div>
+        </article>
+
+        <article class="panel settings-card guide-panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="about.attention.title">Quando aparecer atenção</h2>
+              <span class="panel-sub" data-i18n="about.attention.subtitle">O que conferir antes de mexer em configuração avançada</span>
+            </div>
+          </div>
+          <div class="guide-checklist">
+            <div class="about-block">
+              <strong data-i18n="about.offline.title">Live offline</strong>
+              <p data-i18n="about.offline.copy">Confirme se o canal está realmente ao vivo. Se a live terminou, a atenção some quando outra live válida for conectada.</p>
+            </div>
+            <div class="about-block">
+              <strong data-i18n="about.noChat.title">Chat indisponível</strong>
+              <p data-i18n="about.noChat.copy">Confira se a live é pública e se o chat está ativado na plataforma.</p>
+            </div>
+            <div class="about-block">
+              <strong data-i18n="about.wrongSource.title">Fonte errada</strong>
+              <p data-i18n="about.wrongSource.copy">Cole novamente a URL completa da live ou do canal na CONFIGURAÇÃO.</p>
+            </div>
+            <div class="about-block">
+              <strong data-i18n="about.activeFilter.title">Filtro ativo</strong>
+              <p data-i18n="about.activeFilter.copy">Se o chat parecer incompleto, volte o filtro para Todas na Monitor.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel settings-card guide-panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="about.shortcuts.title">Atalhos</h2>
+              <span class="panel-sub" data-i18n="about.shortcuts.subtitle">Ações rápidas do painel</span>
+            </div>
+          </div>
+          <div id="hotkeysList" class="hotkeys-list"></div>
+        </article>
+      </section>
+      </main>
+    </div>
+
+    <script type="module" src="/about.js"></script>
+  </body>
+</html>

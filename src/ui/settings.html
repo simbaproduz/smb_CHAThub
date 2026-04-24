@@ -1,0 +1,599 @@
+<!--
+       __     __                   
+_|_   (_ ||\/|__) /\ _ _ _ _|   _  
+ |    __)||  |__)/--|_| (_(_||_|/_ 
+                    |  
+-->
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title data-i18n="title.settings">CONFIGURAÇÃO | Live Control - CHAThub</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="theme-dark page-settings">
+    <div class="app-frame">
+      <aside class="sidebar" aria-label="Navegacao principal" data-i18n-aria-label="sidebar.aria">
+        <a href="/" class="sidebar-brand" aria-label="Live Control - CHAThub">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="/icon/simba.png" alt="" onerror="this.onerror=null;this.src='/icon/simba.ico';">
+          </span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <a href="/" class="nav-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H13v2h3v2H8v-2h3v-2H6.5A2.5 2.5 0 0 1 4 13.5v-8Zm2.5-.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11Z"/></svg>
+            <span data-i18n="nav.monitor">Monitor</span>
+          </a>
+          <a href="/settings.html" class="nav-item is-active" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.5-2-3.5-2.4 1a8.4 8.4 0 0 0-2.6-1.5L14 2h-4l-.4 2.5A8.4 8.4 0 0 0 7 6L4.6 5l-2 3.5 2 1.5c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.5 2 3.5 2.4-1a8.4 8.4 0 0 0 2.6 1.5L10 22h4l.4-2.5A8.4 8.4 0 0 0 17 18l2.4 1 2-3.5-2-2ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/></svg>
+            <span data-i18n="nav.settings">CONFIGURAÇÃO</span>
+          </a>
+          <a href="/about.html" class="nav-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4a2 2 0 0 1 2-2h12v16H7a2 2 0 0 0-2 2V4Zm2 16h12v2H7a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4h14v20H7Z"/></svg>
+            <span data-i18n="nav.about">COMO USAR</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="system-pill">
+            <span data-i18n="sidebar.system">Sistema</span>
+            <strong data-i18n="sidebar.operational">Operacional</strong>
+          </div>
+          <span class="app-version">v1.0.0</span>
+        </div>
+      </aside>
+
+      <main class="app-shell">
+      <header class="page-header">
+        <div class="title-block">
+          <p class="eyebrow"><a href="https://simbaproduz.com" target="_blank" rel="noopener noreferrer">@SIMBAproduz</a> | <span data-i18n="header.signature">Live Control</span></p>
+          <h1 data-i18n="header.settings.title">CONFIGURAÇÃO</h1>
+          <p class="hero-text" data-i18n="header.settings.subtitle">Conecte fontes, ajuste o overlay e deixe o Chat Hub pronto para operar.</p>
+        </div>
+        <div class="header-language-slot">
+          <div class="language-switcher" aria-label="Idioma" data-i18n-aria-label="language.title">
+            <span data-i18n="language.label">Idioma</span>
+            <div class="language-options">
+              <button type="button" class="action tiny" data-language-option="pt-BR" aria-pressed="true" data-i18n="language.ptBR">PT-BR</button>
+              <button type="button" class="action tiny ghost" data-language-option="en" aria-pressed="false" data-i18n="language.en">EN</button>
+              <button type="button" class="action tiny ghost" data-language-option="es" aria-pressed="false" data-i18n="language.es">ES</button>
+            </div>
+          </div>
+        </div>
+        <div class="header-ops">
+          <div class="hero-runtime" id="runtimeCard"></div>
+        </div>
+      </header>
+
+      <section class="settings-flow stack">
+        <article class="panel connect-panel settings-connect-panel" id="connectSources">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="settings.connect.title">Conectar canal ou live</h2>
+              <span class="panel-sub" data-i18n="settings.connect.subtitle">Cole o link da live ou do canal. O monitor identifica a plataforma automaticamente.</span>
+            </div>
+            <div class="settings-head-actions">
+              <button type="button" id="quickStartAutoDetectButton" class="action ghost tiny" hidden data-i18n="settings.connect.autoDetect">Auto detectar</button>
+            </div>
+          </div>
+
+          <form id="quickStartForm" class="connect-form" autocomplete="off">
+            <label class="sr-only" for="quickStartInput" data-i18n="settings.connect.label">Link da live ou canal</label>
+              <input
+                id="quickStartInput"
+                name="quick_input"
+                type="text"
+                placeholder="https://twitch.tv/...  |  https://youtube.com/...  |  https://kick.com/...  |  https://tiktok.com/..."
+                data-i18n-placeholder="settings.connect.placeholder"
+                autocomplete="off"
+              >
+            <button type="submit" class="action solid" data-i18n="settings.connect.button">Conectar</button>
+          </form>
+
+          <div id="quickStartStatus" class="auth-status compact" hidden></div>
+          <div class="provider-list platform-status-strip" id="settingsProviderList"></div>
+          <p id="quickStartContext" class="connect-note">
+            <span data-i18n="settings.connect.note">O Chat Hub resolve o resto. Depois volte ao Monitor para acompanhar chat, status e overlay.</span>
+          </p>
+
+          <div class="status-legend" hidden>
+            <span class="provider-state not_configured" data-i18n="settings.status.notConfigured">Nao configurado</span>
+            <span class="provider-state info" data-i18n="common.disconnected">Desconectado</span>
+            <span class="provider-state error" data-i18n="settings.status.missingCredential">Falta credencial</span>
+            <span class="provider-state error" data-i18n="settings.status.missingTarget">Falta alvo</span>
+            <span class="provider-state compatibility_active" data-i18n="settings.status.compatibilityReady">Compatibilidade configurada</span>
+            <span class="provider-state official_ready" data-i18n="settings.status.officialFallbackReady">Fallback oficial pronto</span>
+            <span class="provider-state official_connected" data-i18n="settings.status.officialLoginSaved">Login oficial salvo</span>
+            <span class="provider-state in_preparation" data-i18n="settings.status.inPreparation">Em preparacao</span>
+            <span class="provider-state error" data-i18n="settings.status.failedResolve">Falhou ao resolver</span>
+            <span class="provider-state info" data-i18n="settings.status.liveWithoutChatBadge">Live sem chat disponivel</span>
+            <span class="provider-state runtime_connected" data-i18n="settings.status.runtimeConnected">Capturando mensagens</span>
+          </div>
+        </article>
+
+        <section class="platform-grid" id="platformDetails">
+          <article class="panel settings-card integration-card" data-provider-card="twitch">
+            <div class="integration-card-top">
+              <div>
+                <p class="platform-kicker">Twitch</p>
+                <h2>Twitch</h2>
+                <p class="integration-copy" data-provider-copy></p>
+              </div>
+              <div class="integration-badges">
+                <span class="provider-state" data-provider-status></span>
+                <span class="provider-state method-chip" data-provider-method></span>
+              </div>
+            </div>
+
+            <p class="integration-support" data-provider-support></p>
+            <p class="integration-target" data-provider-target></p>
+            <div class="source-actions" data-provider-actions></div>
+            <ul class="integration-notes" data-provider-notes></ul>
+
+            <div class="integration-actions" hidden>
+              <button type="button" class="action solid" data-provider-quick="twitch" data-i18n="settings.action.useUrlOrChannel">Usar URL ou canal</button>
+              <button type="button" class="action" data-provider-connect="twitch" data-i18n="settings.action.loginTwitchPreview">Login Twitch (Preview)</button>
+              <button type="button" class="action ghost" data-provider-advanced="twitch" data-i18n="settings.action.advanced">Avancado</button>
+            </div>
+
+            <div class="auth-status compact" data-provider-feedback hidden></div>
+
+            <details id="twitchAdvancedDetails" class="advanced-details" hidden>
+              <summary data-i18n="settings.advanced.twitchTitle">Campos avancados da Twitch</summary>
+              <p class="flow-note" data-i18n="settings.advanced.twitchCopy">
+                Use isso apenas se este build ainda nao trouxer as credenciais da app do monitor ou se voce realmente precisar testar com credenciais proprias.
+              </p>
+              <form id="twitchConfigForm" class="config-form" autocomplete="off">
+                <label>
+                  <span data-i18n="settings.advanced.channel">Canal</span>
+                  <input name="channel" type="text" placeholder="canal_twitch" data-i18n-placeholder="settings.placeholder.twitchChannel" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.clientId">Client ID</span>
+                  <input name="client_id" type="text" placeholder="client id da app Twitch" data-i18n-placeholder="settings.placeholder.twitchClientId" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.clientSecret">Client Secret</span>
+                  <input name="client_secret" type="password" placeholder="client secret da app Twitch" data-i18n-placeholder="settings.placeholder.twitchClientSecret" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.redirectUri">Redirect URI</span>
+                  <input name="redirect_uri" type="text" placeholder="http://localhost:4310/auth/twitch/callback" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.broadcasterUserId">Broadcaster User ID</span>
+                  <input name="broadcaster_user_id" type="text" placeholder="preenchido automaticamente apos login" data-i18n-placeholder="settings.placeholder.broadcasterAuto" autocomplete="off">
+                </label>
+                <label class="toggle-row">
+                  <input name="enabled" type="checkbox">
+                  <span data-i18n="settings.advanced.providerEnabled">Provider habilitado</span>
+                </label>
+                <div class="config-actions">
+                  <button type="submit" class="action" data-i18n="settings.action.saveAdvanced">Salvar avancado</button>
+                  <button type="button" id="twitchValidateButton" class="action ghost" data-i18n="settings.action.validateToken">Validar token</button>
+                </div>
+              </form>
+            </details>
+          </article>
+
+          <article class="panel settings-card integration-card" data-provider-card="youtube">
+            <div class="integration-card-top">
+              <div>
+                <p class="platform-kicker">YouTube</p>
+                <h2>YouTube</h2>
+                <p class="integration-copy" data-provider-copy></p>
+              </div>
+              <div class="integration-badges">
+                <span class="provider-state" data-provider-status></span>
+                <span class="provider-state method-chip" data-provider-method></span>
+              </div>
+            </div>
+
+            <p class="integration-support" data-provider-support></p>
+            <p class="integration-target" data-provider-target></p>
+            <div class="source-actions" data-provider-actions></div>
+            <ul class="integration-notes" data-provider-notes></ul>
+
+            <div class="mode-blocks" hidden>
+              <section class="mode-block">
+                <div class="mode-head">
+                  <p class="platform-kicker" data-i18n="settings.advanced.mainMode">Modo principal</p>
+                  <h3 data-i18n="settings.advanced.realCompatibility">Compatibilidade real</h3>
+                </div>
+                <p data-i18n-html="settings.advanced.youtubeCompatCopy">Funciona com live URL, channel URL, <code>@handle</code> ou channel ID. O quick start tenta leitura real da live publica sem pedir credencial do usuario.</p>
+                <ol class="flow-list compact">
+                  <li data-i18n-html="settings.advanced.youtubeCompatStep1">Cole a live, o canal, o <code>@handle</code> ou o channel ID no quick start.</li>
+                  <li data-i18n="settings.advanced.youtubeCompatStep2">O monitor resolve o alvo publico e tenta entrar no chat real por compatibilidade.</li>
+                  <li data-i18n="settings.advanced.youtubeCompatStep3">Se a live estiver offline, restrita ou sem chat, o app mostra isso com honestidade.</li>
+                </ol>
+                <div class="integration-actions">
+                  <button type="button" class="action solid" data-provider-quick="youtube" data-i18n="settings.action.useCompatibility">Usar compatibilidade</button>
+                  <a href="/youtube-guide.html" class="action nav-link" data-i18n="settings.action.howItWorks">Como funciona</a>
+                </div>
+              </section>
+
+              <section class="mode-block">
+                <div class="mode-head">
+                  <p class="platform-kicker" data-i18n="settings.advanced.advancedMode">Modo avancado</p>
+                  <h3 data-i18n="settings.advanced.officialFallback">Fallback oficial</h3>
+                </div>
+                <p data-i18n="settings.advanced.youtubeOfficialCopy">Usa a API oficial do YouTube como fallback avancado. Cada usuario entra com sua propria credencial local. O pacote e o repositorio nao carregam credenciais privadas.</p>
+                <ol class="flow-list compact">
+                  <li data-i18n="settings.advanced.youtubeOfficialStep1">Use isso so quando a compatibilidade nao bastar para a sua live.</li>
+                  <li data-i18n="settings.advanced.youtubeOfficialStep2">Salve primeiro o link da live ou um alvo resolvivel.</li>
+                  <li data-i18n="settings.advanced.youtubeOfficialStep3">Informe sua API key ou access token local para liberar o caminho oficial.</li>
+                </ol>
+                <div class="integration-actions">
+                  <button type="button" class="action" data-provider-official="youtube" data-i18n="settings.action.officialFallback">Fallback oficial</button>
+                  <a href="/youtube-guide.html" class="action nav-link" data-i18n="settings.action.getKey">Como conseguir a chave</a>
+                  <span class="integration-pill" data-i18n="settings.action.userLocalCredential">Credencial local do usuario</span>
+                </div>
+              </section>
+            </div>
+
+            <div class="auth-status compact" data-provider-feedback hidden></div>
+
+            <details id="youtubeOfficialDetails" class="advanced-details" hidden>
+              <summary data-i18n="settings.advanced.youtubeOfficialTitle">Fallback oficial do YouTube</summary>
+              <p class="flow-note" data-i18n="settings.advanced.youtubeOfficialLocalCopy">
+                Esta camada fica como fallback avancado do YouTube. A credencial continua salva apenas no arquivo local privado do usuario.
+              </p>
+              <p class="flow-note" data-i18n="settings.advanced.youtubeOfficialRequirement">
+                Requisito minimo: primeiro salvar a live no quick start. Depois informar uma API key do YouTube Data API v3 ou um access token local.
+              </p>
+              <form id="youtubeOfficialForm" class="config-form compact" autocomplete="off">
+                <label>
+                  <span data-i18n="settings.advanced.apiKey">API Key</span>
+                  <input name="api_key" type="password" placeholder="chave da YouTube Data API" data-i18n-placeholder="settings.placeholder.youtubeApiKey" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.accessToken">Access Token</span>
+                  <input name="access_token" type="password" placeholder="token OAuth local, se necessario" data-i18n-placeholder="settings.placeholder.youtubeAccessToken" autocomplete="off">
+                </label>
+                <label class="toggle-row">
+                  <input name="enabled" type="checkbox">
+                  <span data-i18n="settings.advanced.enableOfficialFallback">Habilitar fallback oficial</span>
+                </label>
+                <div class="config-actions">
+                  <button type="submit" class="action" data-i18n="settings.action.saveOfficialFallback">Salvar fallback oficial</button>
+                </div>
+              </form>
+            </details>
+
+            <details id="youtubeAdvancedDetails" class="advanced-details" hidden>
+              <summary data-i18n="settings.advanced.youtubeAdvancedTitle">Campos avancados do YouTube</summary>
+              <p class="flow-note" data-i18n="settings.advanced.youtubeAdvancedCopy">
+                Esta camada existe para troubleshooting, channel ID fixo, client ID/client secret e overrides locais. O fluxo principal do produto e a compatibilidade real acima.
+              </p>
+              <form id="youtubeConfigForm" class="config-form compact" autocomplete="off">
+                <label>
+                  <span data-i18n="settings.advanced.channel">Canal</span>
+                  <input name="channel" type="text" placeholder="simba_live" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.channelId">Channel ID</span>
+                  <input name="channel_id" type="text" placeholder="UC..." autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.clientId">Client ID</span>
+                  <input name="client_id" type="text" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.clientSecret">Client Secret</span>
+                  <input name="client_secret" type="password" autocomplete="off">
+                </label>
+                <div class="config-actions">
+                  <button type="submit" class="action" data-i18n="settings.action.saveAdvanced">Salvar avancado</button>
+                </div>
+              </form>
+            </details>
+
+            <div class="integration-actions youtube-tail-actions" hidden>
+              <button type="button" class="action ghost" data-provider-advanced="youtube" data-i18n="settings.action.advanced">Avancado</button>
+            </div>
+          </article>
+
+          <article class="panel settings-card integration-card" data-provider-card="kick">
+            <div class="integration-card-top">
+              <div>
+                <p class="platform-kicker">Kick</p>
+                <h2>Kick</h2>
+                <p class="integration-copy" data-provider-copy></p>
+              </div>
+              <div class="integration-badges">
+                <span class="provider-state" data-provider-status></span>
+                <span class="provider-state method-chip" data-provider-method></span>
+              </div>
+            </div>
+
+            <p class="integration-support" data-provider-support></p>
+            <p class="integration-target" data-provider-target></p>
+            <div class="source-actions" data-provider-actions></div>
+            <ul class="integration-notes" data-provider-notes></ul>
+
+            <div class="integration-actions" hidden>
+              <button type="button" class="action solid" data-provider-quick="kick" data-i18n="settings.action.useUrlOrChannel">Usar URL ou canal</button>
+              <span class="integration-pill preparing" data-i18n="settings.action.officialInPreparation">Oficial em preparacao</span>
+              <button type="button" class="action ghost" data-provider-advanced="kick" data-i18n="settings.action.advanced">Avancado</button>
+            </div>
+
+            <div class="auth-status compact" data-provider-feedback hidden></div>
+
+            <details id="kickAdvancedDetails" class="advanced-details" hidden>
+              <summary data-i18n="settings.advanced.kickTitle">Campos avancados do Kick</summary>
+              <p class="flow-note" data-i18n="settings.advanced.kickCopy">
+                Esta camada continua escondida porque o fluxo oficial ainda depende de webhook e relay publico.
+              </p>
+              <form id="kickConfigForm" class="config-form compact" autocomplete="off">
+                <label>
+                  <span data-i18n="settings.advanced.channel">Canal</span>
+                  <input name="channel" type="text" placeholder="simba_kick" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.broadcasterUserId">Broadcaster User ID</span>
+                  <input name="broadcaster_user_id" type="text" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.clientId">Client ID</span>
+                  <input name="client_id" type="text" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.clientSecret">Client Secret</span>
+                  <input name="client_secret" type="password" autocomplete="off">
+                </label>
+                <label>
+                  <span data-i18n="settings.advanced.webhookPublicUrl">Webhook Public URL</span>
+                  <input name="webhook_public_url" type="text" placeholder="https://seu-relay-publico/eventos/kick" data-i18n-placeholder="settings.placeholder.kickWebhook" autocomplete="off">
+                </label>
+                <label class="toggle-row">
+                  <input name="enabled" type="checkbox">
+                  <span data-i18n="settings.advanced.providerEnabled">Provider habilitado</span>
+                </label>
+                <div class="config-actions">
+                  <button type="submit" class="action" data-i18n="settings.action.saveAdvanced">Salvar avancado</button>
+                </div>
+              </form>
+            </details>
+          </article>
+
+          <article class="panel settings-card integration-card tiktok-card" data-provider-card="tiktok">
+            <div class="integration-card-top">
+              <div>
+                <p class="platform-kicker">TikTok</p>
+                <h2>TikTok</h2>
+                <p class="integration-copy" data-provider-copy></p>
+              </div>
+              <div class="integration-badges">
+                <span class="provider-state" data-provider-status></span>
+                <span class="provider-state method-chip" data-provider-method></span>
+              </div>
+            </div>
+
+            <p class="integration-support" data-provider-support></p>
+            <p class="integration-target" data-provider-target></p>
+            <div class="source-actions" data-provider-actions></div>
+            <ul class="integration-notes" data-provider-notes></ul>
+
+            <form id="tiktokConfigForm" class="config-form tiktok-config-form" autocomplete="off" hidden>
+              <label class="wide-field">
+                <span data-i18n="settings.advanced.tiktokQuickInput">URL da live ou @handle</span>
+                <input name="quick_input" type="text" placeholder="https://www.tiktok.com/@seuhandle/live ou @seuhandle" data-i18n-placeholder="settings.placeholder.tiktokQuickInput" autocomplete="off">
+              </label>
+              <label>
+                <span data-i18n="settings.advanced.tiktokHandle">@handle</span>
+                <input name="unique_id" type="text" placeholder="@seuhandle" data-i18n-placeholder="settings.placeholder.tiktokHandle" autocomplete="off">
+              </label>
+              <label class="toggle-row">
+                <input name="enabled" type="checkbox">
+                <span data-i18n="settings.advanced.providerEnabled">Provider habilitado</span>
+              </label>
+              <div class="config-actions">
+                <button type="button" class="action ghost" id="tiktokResolveButton" data-i18n="settings.action.resolveUrl">Resolver URL</button>
+                <button type="submit" class="action solid" data-i18n="settings.action.connectTiktok">Conectar TikTok</button>
+                <button type="button" class="action ghost" data-provider-quick="tiktok" data-i18n="settings.action.useQuickStart">Usar quick start</button>
+              </div>
+            </form>
+
+            <div class="auth-status compact" data-provider-feedback hidden></div>
+          </article>
+
+        </section>
+
+        <section class="overlay-workbench is-collapsed" id="overlaySettings">
+          <article class="panel settings-card overlay-controls-card">
+            <button type="button" class="panel-head overlay-section-toggle" data-overlay-workbench-toggle aria-expanded="false" aria-controls="overlayConfigBody overlayPreviewBody">
+              <div>
+                <h2 data-i18n="settings.overlay.title">Overlay</h2>
+                <span class="panel-sub" data-i18n="settings.overlay.subtitle">Ajuste a janela que fica por cima do jogo</span>
+              </div>
+              <span class="overlay-toggle-pill" data-overlay-toggle-label>Abrir</span>
+            </button>
+
+            <div class="overlay-collapsible-body" id="overlayConfigBody">
+              <!-- Overlay config shell isolated here so the next premium redesign can replace it without touching provider forms. -->
+              <form id="overlayConfigForm" class="config-form overlay-config-grid" autocomplete="off">
+                <div class="overlay-form-stack">
+                  <section class="overlay-form-section">
+                    <div class="overlay-form-heading">
+                      <h3 data-i18n="settings.overlay.basic">Básico</h3>
+                      <p data-i18n="settings.overlay.basicCopy">Escolha onde o overlay abre e defina leitura, tamanho e transparência.</p>
+                    </div>
+
+                    <label class="toggle-row">
+                      <input name="enabled" type="checkbox">
+                      <span data-i18n="settings.overlay.enabled">Overlay habilitado</span>
+                    </label>
+
+                    <div id="overlayDisplaySupport" class="flow-note overlay-note"></div>
+
+                    <div class="overlay-form-fields">
+                      <label>
+                        <span data-i18n="common.monitor">Monitor</span>
+                        <select name="display_id" id="overlayDisplaySelect"></select>
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.corner">Canto da tela</span>
+                        <select name="position">
+                          <option value="top-right" data-i18n="settings.overlay.topRight">Superior direito</option>
+                          <option value="top-left" data-i18n="settings.overlay.topLeft">Superior esquerdo</option>
+                          <option value="bottom-right" data-i18n="settings.overlay.bottomRight">Inferior direito</option>
+                          <option value="bottom-left" data-i18n="settings.overlay.bottomLeft">Inferior esquerdo</option>
+                        </select>
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.fontSize">Tamanho do texto (px)</span>
+                        <input name="font_size_px" type="number" min="10" max="48" step="1">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.duration">Tempo na tela (ms)</span>
+                        <input name="duration_ms" type="number" min="1000" max="300000" step="500">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.maxMessages">Mensagens visíveis</span>
+                        <input name="max_messages" type="number" min="1" max="250" step="1">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.opacity">Transparência do fundo (%)</span>
+                        <input name="background_opacity" type="number" min="0" max="100" step="1">
+                      </label>
+                    </div>
+
+                    <div class="config-actions overlay-display-actions">
+                      <button type="button" class="action ghost" id="overlayIdentifyDisplaysButton" data-i18n="settings.overlay.identify">Identificar monitores</button>
+                      <button type="button" class="action ghost" id="overlayTestDisplayButton" data-i18n="settings.overlay.testMonitor">Testar neste monitor</button>
+                    </div>
+                  </section>
+
+                  <details class="advanced-details overlay-advanced-fields">
+                    <summary data-i18n="settings.overlay.advanced">Ajustes avançados do overlay</summary>
+                    <p class="flow-note" data-i18n="settings.overlay.advancedCopy">Use estes campos só para ajuste fino de posição, largura, espaçamento e filtros.</p>
+                    <div class="overlay-form-fields">
+                      <label>
+                        <span data-i18n="settings.overlay.weight">Peso da mensagem</span>
+                        <select name="message_font_weight">
+                          <option value="regular" data-i18n="settings.overlay.regular">Regular</option>
+                          <option value="semibold" data-i18n="settings.overlay.semibold">Semibold</option>
+                          <option value="bold" data-i18n="settings.overlay.bold">Bold</option>
+                        </select>
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.lineHeight">Altura da linha</span>
+                        <input name="line_height" type="number" min="1" max="2.4" step="0.05">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.cardWidth">Largura do card (px)</span>
+                        <input name="card_width_px" type="number" min="280" max="1200" step="10">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.gap">Espaco entre cards (px)</span>
+                        <input name="gap_px" type="number" min="0" max="64" step="1">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.offsetX">Deslocamento X</span>
+                        <input name="offset_x" type="number" min="-4000" max="4000" step="1">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.offsetY">Deslocamento Y</span>
+                        <input name="offset_y" type="number" min="-4000" max="4000" step="1">
+                      </label>
+                      <label>
+                        <span data-i18n="settings.overlay.animation">Animação</span>
+                        <select name="animation">
+                          <option value="fade" data-i18n="settings.overlay.fade">Fade</option>
+                          <option value="none" data-i18n="settings.overlay.noAnimation">Sem animação</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <div class="overlay-form-heading">
+                      <h3 data-i18n="settings.overlay.contentFilters">Conteúdo e filtros</h3>
+                      <p data-i18n="settings.overlay.contentFiltersCopy">Defina quais sinais entram no overlay.</p>
+                    </div>
+                    <div class="overlay-form-toggle-grid">
+                      <label class="toggle-row compact-toggle">
+                        <input name="show_platform_badge" type="checkbox">
+                        <span data-i18n="settings.overlay.showBadge">Mostrar badge da plataforma</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="show_channel" type="checkbox">
+                        <span data-i18n="settings.overlay.showChannel">Mostrar canal</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="show_avatar" type="checkbox">
+                        <span data-i18n="settings.overlay.showAvatar">Mostrar avatar</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="filter_messages" type="checkbox">
+                        <span data-i18n="settings.overlay.messages">Mensagens</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="filter_joins" type="checkbox">
+                        <span data-i18n="settings.overlay.joins">Entradas na live</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="filter_audience_updates" type="checkbox">
+                        <span data-i18n="settings.overlay.audience">Atualizacoes de audiencia</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="filter_technical_events" type="checkbox">
+                        <span data-i18n="settings.overlay.technical">Eventos tecnicos</span>
+                      </label>
+                    </div>
+
+                    <div class="overlay-platform-filters">
+                      <label class="toggle-row compact-toggle">
+                        <input name="platform_twitch" type="checkbox">
+                        <span>Twitch</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="platform_youtube" type="checkbox">
+                        <span>YouTube</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="platform_kick" type="checkbox">
+                        <span>Kick</span>
+                      </label>
+                      <label class="toggle-row compact-toggle">
+                        <input name="platform_tiktok" type="checkbox">
+                        <span>TikTok</span>
+                      </label>
+                    </div>
+                  </details>
+
+                  <div class="config-actions overlay-submit-actions">
+                    <button type="submit" class="action solid" data-i18n="settings.overlay.save">Salvar overlay</button>
+                  </div>
+                </div>
+              </form>
+
+              <div id="overlayConfigStatus" class="auth-status compact" hidden></div>
+            </div>
+          </article>
+
+          <article class="panel settings-card overlay-preview-panel" id="overlayPreviewPanel">
+            <button type="button" class="panel-head overlay-section-toggle" data-overlay-workbench-toggle aria-expanded="false" aria-controls="overlayConfigBody overlayPreviewBody">
+              <div>
+                <h2 data-i18n="settings.overlay.previewTitle">Preview do overlay</h2>
+                <span class="panel-sub" data-i18n="settings.overlay.previewSubtitle">Referência visual da janela sobreposta</span>
+              </div>
+              <span class="overlay-toggle-pill" data-overlay-toggle-label>Abrir</span>
+            </button>
+            <div class="overlay-collapsible-body" id="overlayPreviewBody">
+              <div class="overlay-preview-frame">
+                <div class="overlay-preview-stage" id="overlayPreviewStage"></div>
+              </div>
+              <p class="flow-note" id="overlayPreviewMeta">O preview usa o estado real atual do app.</p>
+            </div>
+          </article>
+        </section>
+      </section>
+      </main>
+    </div>
+
+    <script type="module" src="/settings.js"></script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+{
+  "scenario": "commands-and-noise",
+  "description": "Prova filtro simples de comandos iniciados com ponto de exclamacao.",
+  "events": [
+    {
+      "id": "noise-001",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:03:01Z",
+      "author": { "id": "user-gabi", "name": "Gabi", "roles": ["viewer"] },
+      "text": "Mensagem normal antes do comando",
+      "parts": [{ "type": "text", "value": "Mensagem normal antes do comando" }]
+    },
+    {
+      "id": "noise-002",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "command",
+      "time": "2026-04-22T00:03:02Z",
+      "author": { "id": "user-hugo", "name": "Hugo", "roles": ["viewer"] },
+      "text": "!comando",
+      "parts": [{ "type": "text", "value": "!comando" }]
+    },
+    {
+      "id": "noise-003",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:03:03Z",
+      "author": { "id": "user-iris", "name": "Iris", "roles": ["viewer"] },
+      "text": "Mensagem com link https://example.invalid/teste",
+      "parts": [
+        { "type": "text", "value": "Mensagem com link " },
+        { "type": "link", "value": "https://example.invalid/teste" }
+      ]
+    }
+  ],
+  "expected": {
+    "received": 3,
+    "shown": 2,
+    "duplicates": 0,
+    "commands_hidden": 1,
+    "errors": 0
+  }
+}

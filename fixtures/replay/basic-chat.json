@@ -1,0 +1,68 @@
+{
+  "scenario": "basic-chat",
+  "description": "Prova mensagens em ordem e separa eventos tecnicos.",
+  "events": [
+    {
+      "id": "sys-basic-start",
+      "version": "system-event.v0",
+      "source": "replay",
+      "kind": "replay_started",
+      "level": "info",
+      "time": "2026-04-22T00:00:00Z",
+      "title": "Replay iniciado",
+      "message": "Fixture basic-chat carregada.",
+      "recoverable": true
+    },
+    {
+      "id": "chat-basic-001",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:00:01Z",
+      "author": { "id": "user-ana", "name": "Ana", "color": "#6EE7B7", "roles": ["viewer"] },
+      "text": "Boa live!",
+      "parts": [{ "type": "text", "value": "Boa live!" }]
+    },
+    {
+      "id": "chat-basic-002",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:00:02Z",
+      "author": { "id": "user-bruno", "name": "Bruno", "color": "#93C5FD", "roles": ["viewer"] },
+      "text": "Salve!",
+      "parts": [{ "type": "text", "value": "Salve!" }]
+    },
+    {
+      "id": "chat-basic-003",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:00:03Z",
+      "author": { "id": "user-carla", "name": "Carla", "color": "#F9A8D4", "roles": ["viewer"] },
+      "text": "O audio esta bom",
+      "parts": [{ "type": "text", "value": "O audio esta bom" }]
+    },
+    {
+      "id": "sys-basic-end",
+      "version": "system-event.v0",
+      "source": "replay",
+      "kind": "replay_finished",
+      "level": "info",
+      "time": "2026-04-22T00:00:04Z",
+      "title": "Replay finalizado",
+      "message": "Fixture basic-chat terminou.",
+      "recoverable": true
+    }
+  ],
+  "expected": {
+    "received": 5,
+    "shown": 3,
+    "duplicates": 0,
+    "commands_hidden": 0,
+    "errors": 0
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "scenario": "duplicated-message",
+  "description": "Prova dedupe por id de evento.",
+  "events": [
+    {
+      "id": "dup-001",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:01:01Z",
+      "author": { "id": "user-duda", "name": "Duda", "roles": ["viewer"] },
+      "text": "Mensagem repetida controlada",
+      "parts": [{ "type": "text", "value": "Mensagem repetida controlada" }]
+    },
+    {
+      "id": "dup-001",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:01:02Z",
+      "author": { "id": "user-duda", "name": "Duda", "roles": ["viewer"] },
+      "text": "Mensagem repetida controlada",
+      "parts": [{ "type": "text", "value": "Mensagem repetida controlada" }]
+    },
+    {
+      "id": "dup-002",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:01:03Z",
+      "author": { "id": "user-erika", "name": "Erika", "roles": ["viewer"] },
+      "text": "Mensagem nova",
+      "parts": [{ "type": "text", "value": "Mensagem nova" }]
+    }
+  ],
+  "expected": {
+    "received": 3,
+    "shown": 2,
+    "duplicates": 1,
+    "commands_hidden": 0,
+    "errors": 0
+  }
+}

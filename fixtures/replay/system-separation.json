@@ -1,0 +1,57 @@
+{
+  "scenario": "system-separation",
+  "description": "Prova que status tecnico nao vira mensagem de usuario.",
+  "events": [
+    {
+      "id": "sys-sep-connecting",
+      "version": "system-event.v0",
+      "source": "replay",
+      "kind": "source_connecting",
+      "level": "info",
+      "time": "2026-04-22T00:02:00Z",
+      "title": "Fonte conectando",
+      "message": "Conexao simulada iniciada.",
+      "recoverable": true
+    },
+    {
+      "id": "sys-sep-connected",
+      "version": "system-event.v0",
+      "source": "replay",
+      "kind": "source_connected",
+      "level": "info",
+      "time": "2026-04-22T00:02:01Z",
+      "title": "Fonte conectada",
+      "message": "Conexao simulada ativa.",
+      "recoverable": true
+    },
+    {
+      "id": "chat-sep-001",
+      "version": "chat-event.v0",
+      "source": "replay",
+      "channel": "canal_teste",
+      "kind": "message",
+      "time": "2026-04-22T00:02:02Z",
+      "author": { "id": "user-felipe", "name": "Felipe", "roles": ["viewer"] },
+      "text": "Mensagem normal",
+      "parts": [{ "type": "text", "value": "Mensagem normal" }]
+    },
+    {
+      "id": "sys-sep-error",
+      "version": "system-event.v0",
+      "source": "replay",
+      "kind": "source_error",
+      "level": "error",
+      "time": "2026-04-22T00:02:03Z",
+      "title": "Erro simulado",
+      "message": "Falha controlada para validar estado tecnico.",
+      "recoverable": true
+    }
+  ],
+  "expected": {
+    "received": 4,
+    "shown": 1,
+    "duplicates": 0,
+    "commands_hidden": 0,
+    "errors": 1
+  }
+}

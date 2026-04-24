@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simba.local/live-control-chat-hub/monitor-state-v0.schema.json",
+  "title": "MonitorState v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["session_id", "mode", "sources", "connections", "messages", "system_events", "filters", "display", "stats"],
+  "properties": {
+    "session_id": { "type": "string", "minLength": 1 },
+    "mode": { "type": "string", "enum": ["replay", "live", "offline", "demo"] },
+    "sources": { "type": "object" },
+    "connections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "messages": { "type": "array" },
+    "system_events": { "type": "array" },
+    "filters": { "type": "object" },
+    "display": { "type": "object" },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["received", "shown", "duplicates", "commands_hidden", "errors"],
+      "properties": {
+        "received": { "type": "integer", "minimum": 0 },
+        "shown": { "type": "integer", "minimum": 0 },
+        "duplicates": { "type": "integer", "minimum": 0 },
+        "commands_hidden": { "type": "integer", "minimum": 0 },
+        "errors": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

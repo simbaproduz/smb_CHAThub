@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://simba.local/live-control-chat-hub/system-event-v0.schema.json",
+  "title": "SystemEvent v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "version", "source", "kind", "level", "time", "title", "message", "recoverable"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "const": "system-event.v0" },
+    "source": { "type": "string", "enum": ["replay", "twitch", "youtube", "kick", "tiktok"] },
+    "channel": { "type": "string" },
+    "connection_id": { "type": "string", "minLength": 1 },
+    "stream_id": { "type": "string" },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "source_connecting",
+        "source_connected",
+        "source_disconnected",
+        "source_error",
+        "replay_started",
+        "replay_finished",
+        "stream_started",
+        "stream_ended",
+        "livestream_metadata_updated"
+      ]
+    },
+    "level": { "type": "string", "enum": ["info", "warning", "error"] },
+    "time": { "type": "string", "format": "date-time" },
+    "title": { "type": "string", "minLength": 1 },
+    "message": { "type": "string" },
+    "recoverable": { "type": "boolean" },
+    "accent_color": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
