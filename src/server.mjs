@@ -5,7 +5,7 @@
 
 import { createReadStream } from "node:fs";
 import { stat, readFile } from "node:fs/promises";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import http from "node:http";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -29,6 +29,8 @@ const MIME_TYPES = {
 const runtime = new MonitorRuntime(ROOT_DIR);
 const twitchAuth = new TwitchAuthManager();
 const sseClients = new Set();
+const httpSockets = new Set();
+const childProcesses = new Set();
 let overlayProcess = null;
 let overlayStderr = "";
 let overlayReadyTimeout = null;
@@ -44,9 +46,46 @@ let overlayState = {
   openedAt: null
 };
 
+function trackChildProcess(child) {
+  childProcesses.add(child);
+  const forget = () => {
+    childProcesses.delete(child);
+  };
+  child.on("exit", forget);
+  child.on("close", forget);
+  child.on("error", forget);
+  return child;
+}
+
+function killProcessTree(child) {
+  if (!child || child.killed || child.exitCode !== null || !child.pid) {
+    return;
+  }
+
+  try {
+    spawnSync("taskkill.exe", ["/PID", String(child.pid), "/T", "/F"], {
+      windowsHide: true,
+      stdio: "ignore"
+    });
+  } catch {
+    try {
+      child.kill();
+    } catch {
+      // processo ja pode ter saido
+    }
+  }
+}
+
+function killTrackedChildProcesses() {
+  for (const child of [...childProcesses]) {
+    killProcessTree(child);
+  }
+  childProcesses.clear();
+}
+
 function runPowershellFile(scriptPath, args = []) {
   return new Promise((resolve, reject) => {
-    const child = spawn("powershell.exe", [
+    const child = trackChildProcess(spawn("powershell.exe", [
       "-NoProfile",
       "-ExecutionPolicy",
       "Bypass",
@@ -56,7 +95,7 @@ function runPowershellFile(scriptPath, args = []) {
     ], {
       cwd: ROOT_DIR,
       windowsHide: true
-    });
+    }));
 
     let stdout = "";
     let stderr = "";
@@ -284,7 +323,7 @@ function openOverlay({
   const height = computeOverlayHeight(overlayConfig);
   const displayTarget = displayId || overlayConfig.display_id || "primary";
 
-  overlayProcess = spawn("powershell.exe", [
+  overlayProcess = trackChildProcess(spawn("powershell.exe", [
     "-NoProfile",
     "-STA",
     "-ExecutionPolicy",
@@ -341,7 +380,7 @@ function openOverlay({
     cwd: ROOT_DIR,
     windowsHide: false,
     stdio: ["ignore", "ignore", "pipe"]
-  });
+  }));
 
   overlayProcess.stderr.on("data", (chunk) => {
     overlayStderr += chunk.toString();
@@ -409,18 +448,7 @@ function closeOverlay() {
 
   setOverlayState({ status: "closing" });
 
-  try {
-    spawn("taskkill.exe", ["/PID", String(overlayProcess.pid), "/T", "/F"], {
-      windowsHide: true,
-      stdio: "ignore"
-    });
-  } catch {
-    try {
-      overlayProcess.kill();
-    } catch {
-      // processo ja pode ter saido
-    }
-  }
+  killProcessTree(overlayProcess);
 
   return getOverlayStatus();
 }
@@ -726,9 +754,73 @@ const server = http.createServer(async (request, response) => {
   sendJson(response, 404, { ok: false, error: "not_found" });
 });
 
+server.on("connection", (socket) => {
+  httpSockets.add(socket);
+  socket.on("close", () => {
+    httpSockets.delete(socket);
+  });
+});
+
 runtime.on("change", (snapshot) => {
   sendSse(snapshot);
 });
+
+function closeSseClients() {
+  for (const response of sseClients) {
+    try {
+      response.end();
+    } catch {
+      // cliente ja pode ter desconectado
+    }
+  }
+  sseClients.clear();
+}
+
+function destroyHttpSockets() {
+  for (const socket of httpSockets) {
+    try {
+      socket.destroy();
+    } catch {
+      // socket ja pode ter fechado
+    }
+  }
+  httpSockets.clear();
+}
+
+function closeHttpServer({ force = false, timeoutMs = 2500 } = {}) {
+  closeSseClients();
+
+  if (!server.listening) {
+    destroyHttpSockets();
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      resolve();
+    };
+
+    const timer = setTimeout(() => {
+      destroyHttpSockets();
+      finish();
+    }, timeoutMs);
+    timer.unref?.();
+
+    server.close(finish);
+    server.closeIdleConnections?.();
+
+    if (force) {
+      server.closeAllConnections?.();
+      destroyHttpSockets();
+    }
+  });
+}
 
 export async function startChatHubServer({
   forceDemo = false,
@@ -773,16 +865,13 @@ export async function startChatHubServer({
   };
 }
 
-export async function stopChatHubServer({ exitCode = null } = {}) {
+export async function stopChatHubServer({ exitCode = null, force = false } = {}) {
   clearTimeout(overlayReadyTimeout);
   closeOverlay();
+  killTrackedChildProcesses();
+  closeSseClients();
   await runtime.stopAllAdapters();
-
-  if (server.listening) {
-    await new Promise((resolve) => {
-      server.close(resolve);
-    });
-  }
+  await closeHttpServer({ force });
 
   if (exitCode !== null) {
     process.exit(exitCode);

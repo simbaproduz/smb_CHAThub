@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-8B5CF6?style=for-the-badge">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.2-8B5CF6?style=for-the-badge">
   <img alt="Status" src="https://img.shields.io/badge/status-stable-22C55E?style=for-the-badge">
   <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-3B82F6?style=for-the-badge&logo=windows">
   <img alt="License" src="https://img.shields.io/badge/license-MIT-EC4899?style=for-the-badge">
@@ -35,6 +35,24 @@
   <img alt="Kick" src="https://img.shields.io/badge/Kick-supported-53FC18?style=flat-square">
   <img alt="TikTok" src="https://img.shields.io/badge/TikTok-supported-111827?style=flat-square&logo=tiktok&logoColor=white">
 </p>
+
+## Download para usar
+
+Se você só quer abrir o CHAT HUB, vá em **Releases** e baixe um destes arquivos:
+
+- `CHAT-HUB-1.0.2-Windows-x64.exe`
+- `CHAT-HUB-1.0.2-USUARIO-FINAL.zip`
+
+O caminho mais simples é baixar o `.exe` e abrir com dois cliques. Se o navegador ou antivírus bloquear o `.exe`, baixe o ZIP `USUARIO-FINAL`, extraia a pasta e abra o `.exe` que está dentro.
+
+| Arquivo | Para quem é | O que fazer |
+| --- | --- | --- |
+| `CHAT-HUB-1.0.2-Windows-x64.exe` | Usuário normal | Baixar e abrir. |
+| `CHAT-HUB-1.0.2-USUARIO-FINAL.zip` | Usuário normal que prefere ZIP | Extrair primeiro, depois abrir o `.exe`. |
+| `Source code.zip` | Desenvolvedor | Não use para instalar. |
+| `Source code.tar.gz` | Desenvolvedor | Não use para instalar. |
+
+Importante: o botão verde **Code** do GitHub baixa código-fonte. Ele não instala o app. Para usar o CHAT HUB, use sempre os arquivos da área **Releases**.
 
 ## O que é
 
@@ -53,6 +71,7 @@ O objetivo é simples: permitir que o streamer leia o chat em tempo real enquant
 - Interface dark premium com sidebar, cards compactos e fluxo operacional.
 - Idiomas de interface: PT-BR, EN e ES.
 - Configuração local persistente, sem enviar credenciais para servidor externo.
+- Fechamento completo pelo X: app, servidor local e overlay encerram juntos.
 - Testes locais de replay e regressão de status.
 
 ## Plataformas suportadas
@@ -80,14 +99,28 @@ O objetivo é simples: permitir que o streamer leia o chat em tempo real enquant
 
 ## Como usar
 
-### Requisitos
+### Requisitos para usuários
 
 - Windows 10 ou Windows 11.
-- Node.js 20+ recomendado.
 - PowerShell disponível no sistema.
 - Lives públicas nas plataformas que você deseja conectar.
+- Não precisa instalar Node.js, npm nem bibliotecas.
 
-### Instalação local
+### Abrir o app
+
+1. Baixe `CHAT-HUB-1.0.2-Windows-x64.exe` ou `CHAT-HUB-1.0.2-USUARIO-FINAL.zip`.
+2. Se baixou o ZIP, extraia a pasta antes de abrir.
+3. Abra o executável `CHAT-HUB-1.0.2-Windows-x64.exe`.
+4. Se o Windows mostrar aviso de segurança, clique em **Mais informações** e depois em **Executar assim mesmo**.
+5. Para fechar, clique no **X** do app. Isso também finaliza o servidor local e o overlay.
+
+### Se você baixou o arquivo errado
+
+Se você baixou `Source code.zip`, `Source code.tar.gz` ou usou o botão verde **Code**, apague esse arquivo e baixe o `.exe` ou o ZIP `USUARIO-FINAL` na página de release. O código-fonte precisa de Node.js e bibliotecas, por isso não é o pacote certo para usuário leigo.
+
+### Desenvolvimento local
+
+Esta parte é só para quem quer mexer no código.
 
 Para abrir como app desktop durante o desenvolvimento:
 
@@ -114,6 +147,8 @@ Também existe um atalho local:
 ```text
 start-live-control-chathub.cmd
 ```
+
+Esse atalho tenta instalar dependências automaticamente quando alguém baixou o ZIP de código, mas o caminho recomendado para usuário final continua sendo o `.exe`.
 
 ### Fluxo recomendado
 
@@ -170,6 +205,7 @@ npm run build:desktop
 npm run check:status
 npm run check:replay
 npm run package:release
+npm run package:source-dev
 ```
 
 ## Build desktop
@@ -177,16 +213,17 @@ npm run package:release
 O app desktop usa Electron para abrir o **CHAT HUB** em janela própria, com titlebar custom, ícone `simba.ico` e runtime local iniciado automaticamente.
 
 ```bash
-npm run build:desktop
+npm run package:release
 ```
 
-Os artefatos gerados saem em:
+Os artefatos para usuário final saem em:
 
 ```text
-output/desktop/
+output/release/CHAT-HUB-1.0.2-Windows-x64.exe
+output/release/CHAT-HUB-1.0.2-USUARIO-FINAL.zip
 ```
 
-Arquivos `.exe`, logs, cache e builds gerados não entram no Git. O executável final deve ser publicado em **GitHub Releases**, não versionado no código-fonte.
+Use `npm run package:source-dev` apenas quando precisar gerar um ZIP de código para desenvolvedores. Arquivos `.exe`, logs, cache e builds gerados não entram no Git. O executável final deve ser publicado em **GitHub Releases**, não versionado no código-fonte.
 
 ## Roadmap
 

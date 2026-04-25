@@ -9,6 +9,7 @@ const { pathToFileURL } = require("node:url");
 
 const APP_NAME = "CHAT HUB";
 const APP_ID = "com.simbaproduz.chathub";
+const FORCE_EXIT_TIMEOUT_MS = 5000;
 
 let mainWindow = null;
 let stopServer = null;
@@ -106,6 +107,15 @@ function createMainWindow(runtimeInfo) {
     mainWindow?.setTitle(APP_NAME);
   });
 
+  mainWindow.on("close", (event) => {
+    if (cleanupStarted) {
+      return;
+    }
+
+    event.preventDefault();
+    cleanupAndExit(0);
+  });
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
@@ -119,11 +129,24 @@ async function cleanupAndExit(exitCode = 0) {
   }
 
   cleanupStarted = true;
+  const forceExitTimer = setTimeout(() => {
+    app.exit(exitCode);
+    process.exit(exitCode);
+  }, FORCE_EXIT_TIMEOUT_MS);
+  forceExitTimer.unref?.();
+
   try {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.removeAllListeners("close");
+      mainWindow.destroy();
+      mainWindow = null;
+    }
+
     if (stopServer) {
-      await stopServer();
+      await stopServer({ force: true });
     }
   } finally {
+    clearTimeout(forceExitTimer);
     process.exitCode = exitCode;
     app.exit(exitCode);
     setTimeout(() => {
@@ -136,8 +159,9 @@ ipcMain.handle("window:minimize", () => {
   mainWindow?.minimize();
 });
 
-ipcMain.handle("window:close", () => {
-  return cleanupAndExit(0);
+ipcMain.handle("window:close", async () => {
+  await cleanupAndExit(0);
+  return true;
 });
 
 app.on("second-instance", () => {

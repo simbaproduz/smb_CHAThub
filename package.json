@@ -1,6 +1,6 @@
 {
   "name": "smb-chathub",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Unified live chat monitor and overlay for Twitch, YouTube, Kick and TikTok.",
   "license": "MIT",
   "author": "SIMBAproduz",
@@ -20,10 +20,11 @@
     "desktop": "electron .",
     "build:desktop": "electron-builder --win portable --x64",
     "build:desktop:dir": "electron-builder --dir --win --x64",
-    "build:desktop:zip": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Compress-Archive -Path 'output/desktop/win-unpacked/*' -DestinationPath 'output/desktop/CHAT-HUB-1.0.1-win-unpacked.zip' -Force\"",
+    "build:desktop:zip": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"Compress-Archive -Path 'output/desktop/win-unpacked/*' -DestinationPath 'output/desktop/CHAT-HUB-1.0.2-win-unpacked.zip' -Force\"",
     "check:replay": "node tools/replay-local.mjs",
     "check:status": "node tools/status-state-regression.mjs",
-    "package:release": "powershell -ExecutionPolicy Bypass -File tools/package-release.ps1"
+    "package:release": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/package-release.ps1",
+    "package:source-dev": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/package-source-dev.ps1"
   },
   "dependencies": {
     "tiktok-live-connector": "^2.1.0"
@@ -75,7 +76,7 @@
           ]
         }
       ],
-      "artifactName": "CHAT-HUB-${version}-${arch}.${ext}"
+      "artifactName": "CHAT-HUB-${version}-Windows-${arch}.${ext}"
     }
   }
 }

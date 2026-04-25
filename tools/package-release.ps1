@@ -1,174 +1,179 @@
-#        __     __                   
-# _|_   (_ ||\/|__) /\ _ _ _ _|   _  
-#  |    __)||  |__)/--|_| (_(_||_|/_ 
-#                     |  
+#        __     __
+# _|_   (_ ||\/|__) /\ _ _ _ _|   _
+#  |    __)||  |__)/--|_| (_(_||_|/_
+#                     |
 
-param()
+param(
+  [switch]$SkipBuild
+)
 
 $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
 $package = Get-Content -Raw (Join-Path $root "package.json") | ConvertFrom-Json
 $version = $package.version
+$desktopRoot = Join-Path $root "output\desktop"
 $releaseRoot = Join-Path $root "output\release"
-$stageDir = Join-Path $releaseRoot "Live-Control-CHAThub-$version"
-$zipPath = "$stageDir.zip"
+$userDir = Join-Path $releaseRoot "CHAT-HUB-$version-USUARIO-FINAL"
+$userZip = "$userDir.zip"
+$sourceHintPath = Join-Path $releaseRoot "NAO-USE-SOURCE-CODE-ZIP.txt"
 
-if (Test-Path $stageDir) {
-  Remove-Item -LiteralPath $stageDir -Recurse -Force
-}
+function Invoke-Npm {
+  param(
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$Arguments
+  )
 
-if (Test-Path $zipPath) {
-  Remove-Item -LiteralPath $zipPath -Force
-}
-
-New-Item -ItemType Directory -Force -Path $stageDir | Out-Null
-
-$itemsToCopy = @(
-  "package.json",
-  "package-lock.json",
-  ".gitignore",
-  "LICENSE",
-  "README.md",
-  "README.en.md",
-  "README.es.md",
-  "contracts",
-  "desktop",
-  "docs",
-  "src",
-  "tools",
-  "fixtures",
-  "icon"
-)
-
-foreach ($item in $itemsToCopy) {
-  Copy-Item -LiteralPath (Join-Path $root $item) -Destination $stageDir -Recurse -Force
-}
-
-$cleanConfig = @'
-{
-  "runtime": {
-    "port": 4310,
-    "auto_start_demo": false
-  },
-  "overlay": {
-    "enabled": true,
-    "display_id": "primary",
-    "position": "top-right",
-    "offset_x": 32,
-    "offset_y": 96,
-    "duration_ms": 15000,
-    "max_messages": 6,
-    "font_size_px": 18,
-    "message_font_weight": "semibold",
-    "line_height": 1.25,
-    "card_width_px": 320,
-    "gap_px": 6,
-    "background_opacity": 85,
-    "show_platform_badge": true,
-    "show_channel": true,
-    "show_avatar": false,
-    "animation": "fade",
-    "filters": {
-      "messages": true,
-      "joins": false,
-      "audience_updates": false,
-      "technical_events": false,
-      "platforms": {
-        "twitch": true,
-        "youtube": true,
-        "kick": true,
-        "tiktok": true
-      }
-    }
-  },
-  "ui": {
-    "active_source_filter": "all",
-    "language": "pt-BR",
-    "onboarding_seen": false,
-    "hotkeys": {
-      "show_all": "Alt+0",
-      "filter_twitch": "Alt+1",
-      "filter_youtube": "Alt+2",
-      "filter_kick": "Alt+3",
-      "filter_tiktok": "Alt+4",
-      "start_demo": "Alt+D",
-      "start_replay": "Alt+R",
-      "open_overlay": "Botao Abrir Overlay"
-    }
-  },
-  "providers": {
-    "twitch": {
-      "enabled": false,
-      "channel": "",
-      "broadcaster_user_id": "",
-      "client_id": "",
-      "client_secret": "",
-      "redirect_uri": "http://localhost:4310/auth/twitch/callback",
-      "setup_mode": "",
-      "quick_input": "",
-      "access_token": "",
-      "refresh_token": "",
-      "scopes": [],
-      "display_name": "",
-      "login_name": "",
-      "token_expires_at": "",
-      "token_last_validated_at": "",
-      "auth_status": "idle",
-      "auth_error": ""
-    },
-    "youtube": {
-      "enabled": false,
-      "channel": "",
-      "channel_id": "",
-      "api_key": "",
-      "client_id": "",
-      "client_secret": "",
-      "setup_mode": "",
-      "quick_input": "",
-      "access_token": "",
-      "refresh_token": ""
-    },
-    "kick": {
-      "enabled": false,
-      "channel": "",
-      "broadcaster_user_id": "",
-      "client_id": "",
-      "client_secret": "",
-      "setup_mode": "",
-      "quick_input": "",
-      "access_token": "",
-      "refresh_token": "",
-      "webhook_public_url": ""
-    },
-    "tiktok": {
-      "enabled": false,
-      "channel": "",
-      "unique_id": "",
-      "quick_input": "",
-      "setup_mode": ""
-    }
+  & npm.cmd @Arguments
+  if ($LASTEXITCODE -ne 0) {
+    throw "npm $($Arguments -join ' ') falhou com codigo $LASTEXITCODE."
   }
 }
-'@
 
-$runtimeDir = Join-Path $stageDir "runtime"
-New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
-Set-Content -LiteralPath (Join-Path $runtimeDir "monitor-config.json") -Value $cleanConfig -Encoding UTF8
-$logDir = Join-Path $runtimeDir "logs"
-New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+function Remove-IfExists {
+  param([string]$Path)
 
-$launcher = @'
-@echo off
-::        __     __
-:: _|_   (_ ||\/|__) /\ _ _ _ _|   _
-::  |    __)||  |__)/--|_| (_(_||_|/_
-::                     |
+  if (Test-Path $Path) {
+    Remove-Item -LiteralPath $Path -Recurse -Force
+  }
+}
 
-cd /d %~dp0
-npm start
-'@
-Set-Content -LiteralPath (Join-Path $stageDir "start-live-control-chathub.cmd") -Value $launcher -Encoding ASCII
+New-Item -ItemType Directory -Force -Path $releaseRoot | Out-Null
 
-Compress-Archive -Path "$stageDir\*" -DestinationPath $zipPath -Force
-Write-Output $zipPath
+foreach ($pattern in @(
+  "CHAT-HUB-*-Windows-*.exe",
+  "CHAT-HUB-*-USUARIO-FINAL",
+  "CHAT-HUB-*-USUARIO-FINAL.zip",
+  "Live-Control-CHAThub-*",
+  "Live-Control-CHAThub-*.zip"
+)) {
+  Get-ChildItem -LiteralPath $releaseRoot -Force -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -like $pattern } |
+    Remove-Item -Recurse -Force
+}
+
+Remove-IfExists $userDir
+Remove-IfExists $userZip
+Remove-IfExists $sourceHintPath
+
+Push-Location $root
+try {
+  if (-not (Test-Path (Join-Path $root "node_modules\electron-builder"))) {
+    Write-Output "Dependencias de build ausentes. Rodando npm install..."
+    Invoke-Npm install
+  }
+
+  if (-not $SkipBuild) {
+    Write-Output "Gerando executavel Windows para usuario final..."
+    Invoke-Npm run build:desktop
+  }
+} finally {
+  Pop-Location
+}
+
+$exe = Get-ChildItem -LiteralPath $desktopRoot -File -Filter "CHAT-HUB-$version-*.exe" |
+  Sort-Object LastWriteTime -Descending |
+  Select-Object -First 1
+
+if (-not $exe) {
+  throw "Nao encontrei o executavel do CHAT HUB em $desktopRoot. Rode npm run build:desktop."
+}
+
+New-Item -ItemType Directory -Force -Path $userDir | Out-Null
+$finalExeName = "CHAT-HUB-$version-Windows-x64.exe"
+Copy-Item -LiteralPath $exe.FullName -Destination (Join-Path $userDir $finalExeName) -Force
+
+$readmePtBr = @"
+CHAT HUB - LEIA PRIMEIRO
+
+Este pacote e para usuario final.
+
+Como abrir:
+1. Extraia este ZIP.
+2. De dois cliques em $finalExeName.
+3. Se o Windows mostrar um aviso de seguranca, clique em Mais informacoes e depois em Executar assim mesmo.
+
+Voce nao precisa instalar Node.js.
+Voce nao precisa rodar npm install.
+Voce nao precisa baixar bibliotecas.
+
+Nao use os arquivos "Source code.zip" ou "Source code.tar.gz" do GitHub para instalar o app.
+Esses arquivos sao apenas para desenvolvedores.
+
+Se algo nao abrir:
+- confirme que voce esta no Windows 10 ou Windows 11;
+- extraia o ZIP antes de abrir;
+- tente mover a pasta para a Area de Trabalho;
+- evite rodar direto de dentro do ZIP.
+"@
+Set-Content -LiteralPath (Join-Path $userDir "LEIA-ME-PRIMEIRO-PTBR.txt") -Value $readmePtBr -Encoding ASCII
+
+$readmeEn = @"
+CHAT HUB - READ FIRST
+
+This package is for normal users.
+
+How to open:
+1. Extract this ZIP first.
+2. Double-click $finalExeName.
+3. If Windows shows a security warning, click More info and then Run anyway.
+
+You do not need to install Node.js.
+You do not need to run npm install.
+You do not need to download libraries.
+
+Do not use "Source code.zip" or "Source code.tar.gz" from GitHub to install the app.
+Those files are for developers only.
+
+If it does not open:
+- confirm you are on Windows 10 or Windows 11;
+- extract the ZIP before opening;
+- try moving the folder to the Desktop;
+- do not run the app from inside the ZIP preview.
+"@
+Set-Content -LiteralPath (Join-Path $userDir "README-FIRST-EN.txt") -Value $readmeEn -Encoding ASCII
+
+$readmeEs = @"
+CHAT HUB - LEE ESTO PRIMERO
+
+Este paquete es para usuarios finales.
+
+Como abrir:
+1. Extrae este ZIP primero.
+2. Haz doble clic en $finalExeName.
+3. Si Windows muestra una alerta de seguridad, haz clic en Mas informacion y luego en Ejecutar de todos modos.
+
+No necesitas instalar Node.js.
+No necesitas ejecutar npm install.
+No necesitas descargar bibliotecas.
+
+No uses "Source code.zip" o "Source code.tar.gz" de GitHub para instalar la app.
+Esos archivos son solo para desarrolladores.
+
+Si no abre:
+- confirma que usas Windows 10 o Windows 11;
+- extrae el ZIP antes de abrir;
+- intenta mover la carpeta al Escritorio;
+- evita ejecutar la app desde la vista previa del ZIP.
+"@
+Set-Content -LiteralPath (Join-Path $userDir "LEE-ME-PRIMERO-ES.txt") -Value $readmeEs -Encoding ASCII
+
+$releaseHint = @"
+UPLOAD RECOMENDADO PARA GITHUB RELEASE
+
+Para usuarios leigos, publique somente estes artefatos:
+- CHAT-HUB-$version-USUARIO-FINAL.zip
+- ou $finalExeName
+
+Nao publique o pacote SOURCE-DEV para usuarios finais.
+Evite destacar Source code.zip / Source code.tar.gz.
+Eles sao gerados automaticamente pelo GitHub e exigem Node.js + npm install.
+"@
+Set-Content -LiteralPath $sourceHintPath -Value $releaseHint -Encoding ASCII
+
+Compress-Archive -Path "$userDir\*" -DestinationPath $userZip -Force
+Copy-Item -LiteralPath (Join-Path $userDir $finalExeName) -Destination (Join-Path $releaseRoot $finalExeName) -Force
+
+Write-Output "Release de usuario final pronto:"
+Write-Output $userZip
+Write-Output (Join-Path $releaseRoot $finalExeName)

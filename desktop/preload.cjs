@@ -109,17 +109,18 @@ function injectDesktopChrome() {
 
     .desktop-window-actions {
       position: fixed;
-      top: 10px;
-      right: 12px;
+      top: 6px;
+      right: 8px;
       z-index: 10000;
       display: flex;
       gap: 8px;
       -webkit-app-region: no-drag;
+      pointer-events: auto;
     }
 
     .desktop-window-button {
-      width: 38px;
-      height: 32px;
+      width: 44px;
+      height: 38px;
       display: grid;
       place-items: center;
       border: 1px solid rgba(154, 168, 194, 0.16);
@@ -165,13 +166,56 @@ function injectDesktopChrome() {
       </button>
   `;
 
-  windowActions.querySelector("[data-window-minimize]").addEventListener("click", () => {
+  windowActions.querySelector("[data-window-minimize]").addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     ipcRenderer.invoke("window:minimize");
   });
 
-  windowActions.querySelector("[data-window-close]").addEventListener("click", () => {
-    ipcRenderer.invoke("window:close");
+  let closeRequested = false;
+  const closeButton = windowActions.querySelector("[data-window-close]");
+  async function requestClose() {
+    if (closeRequested) {
+      return;
+    }
+
+    closeRequested = true;
+    closeButton.setAttribute("aria-busy", "true");
+    closeButton.disabled = true;
+
+    try {
+      await ipcRenderer.invoke("window:close");
+    } catch {
+      window.close();
+    }
+  }
+
+  closeButton.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    requestClose();
   });
+
+  closeButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    requestClose();
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (closeRequested) {
+      return;
+    }
+
+    const isCloseCorner = event.clientX >= window.innerWidth - 72 && event.clientY <= 58;
+    if (!isCloseCorner) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    requestClose();
+  }, true);
 
   document.body.prepend(dragRegion, windowActions);
 }
